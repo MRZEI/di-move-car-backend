@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.dimovecar.mapper.MoveNotificationMapper">
+
+    <resultMap id="NotificationVOMap" type="com.dimovecar.dto.NotificationVO">
+        <id column="id" property="id"/>
+        <result column="initiator_id" property="initiatorId"/>
+        <result column="target_user_id" property="targetUserId"/>
+        <result column="target_vehicle_id" property="targetVehicleId"/>
+        <result column="plate_number" property="plateNumber"/>
+        <result column="notify_type" property="notifyType"/>
+        <result column="status" property="status"/>
+        <result column="location" property="location"/>
+        <result column="parking_info" property="parkingInfo"/>
+        <result column="remark" property="remark"/>
+        <result column="response_time" property="responseTime"/>
+        <result column="complete_time" property="completeTime"/>
+        <result column="create_time" property="createTime"/>
+    </resultMap>
+
+    <select id="selectNotificationPage" resultMap="NotificationVOMap">
+        SELECT
+            mn.id,
+            mn.initiator_id,
+            mn.target_user_id,
+            mn.target_vehicle_id,
+            mn.plate_number,
+            mn.notify_type,
+            mn.status,
+            mn.location,
+            mn.parking_info,
+            mn.remark,
+            mn.response_time,
+            mn.complete_time,
+            mn.create_time
+        FROM move_notification mn
+        WHERE mn.deleted = 0
+        AND (
+            mn.initiator_id = #{userId}
+            OR mn.target_user_id = #{userId}
+        )
+        <if test="status != null">
+            AND mn.status = #{status}
+        </if>
+        <if test="notifyType != null">
+            AND mn.notify_type = #{notifyType}
+        </if>
+        ORDER BY mn.create_time DESC
+    </select>
+
+    <select id="selectNotificationDetail" resultMap="NotificationVOMap">
+        SELECT
+            mn.id,
+            mn.initiator_id,
+            mn.target_user_id,
+            mn.target_vehicle_id,
+            mn.plate_number,
+            mn.notify_type,
+            mn.status,
+            mn.location,
+            mn.parking_info,
+            mn.remark,
+            mn.response_time,
+            mn.complete_time,
+            mn.create_time
+        FROM move_notification mn
+        WHERE mn.deleted = 0
+        AND mn.id = #{id}
+        AND (
+            mn.initiator_id = #{userId}
+            OR mn.target_user_id = #{userId}
+        )
+        LIMIT 1
+    </select>
+
+</mapper>
