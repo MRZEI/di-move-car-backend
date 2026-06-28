@@ -1,0 +1,72 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /api
+
+spring:
+  application:
+    name: di-move-car-backend
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/di_move_car?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai&allowPublicKeyRetrieval=true
+    username: root
+    password: root
+
+  redis:
+    host: localhost
+    port: 6379
+    password:
+    database: 0
+    timeout: 3000ms
+    lettuce:
+      pool:
+        max-active: 8
+        max-wait: -1ms
+        max-idle: 8
+        min-idle: 0
+
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.dimovecar.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: auto
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+# JWT配置
+jwt:
+  secret: di-move-car-secret-key-2024-very-long-secret-key-for-jwt-token-generation
+  expiration: 604800000
+  header: Authorization
+  prefix: Bearer
+
+# 短信验证码配置
+sms:
+  code-expire-minutes: 5
+  code-length: 6
+
+# 腾讯地图配置
+tencent-map:
+  key: your-tencent-map-key
+
+# Swagger
+knife4j:
+  enable: true
+  openapi:
+    title: DI挪车小程序API文档
+    description: DI挪车小程序后端服务接口文档
+    email: admin@dimovecar.com
+    concat: 技术支持
+    version: 1.0.0
+    group:
+      default:
+        group-name: default
+        api-rule: package
+        api-rule-resources:
+          - com.dimovecar.controller
